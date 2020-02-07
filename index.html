@@ -7,31 +7,29 @@
 </head>
 
 <body>
- <div id="container">
-	 <div id="current">Nothing yet...</div>
+	<div id="container">
+	<div id="current">Nothing yet...</div>
 	<div class="d-flex justify-content-around">
 		<div class= "col md-6">	
-			<div class= "ml-5">	
-				<h1>Avis de restaurant</h1>
-				<div id="googleMap"></div>
-			</div>
-			<button type="button" class="btn btn-info btn-lg" id="myBtn">Open Modal</button>
-
+		<div class= "ml-5">	
+			<h1>Avis de restaurant</h1>
+			<div id="googleMap"></div>
+		</div>
+	<br>
   <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
+	<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">   
       <!-- Modal content-->
-      <div class="modal-content">
+    <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Votre commentaire</h4>
+			<h4 class="modal-title">Votre commentaire</h4>
+			<button type="button" class="close" data-dismiss="modal">&times;</button>			
         </div>
-         <div class="input-field col s12">
-                                <input id="newRatingForm" type="text" class="validate" required>
-        <div class="modal-footer">
-          <button type="button" id ="confirmation"  onclick="confirmer()"  class="btn btn-default" data-dismiss="modal">confirmer</button>
-		  <div class="form-group">
+        <div class="input-field col s12">
+<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+			<div class="modal-footer">
+				<button type="button" id ="confirmation"  onclick="confirmer()"  class="btn btn-default" data-dismiss="modal">confirmer</button>
+				<div class="form-group">
 					<label>rating:</label>
 					<div class="radio">
 						<label><input type="radio" value="1" id="rate1" name="optradioRate" CHECKED>1</label>
@@ -40,7 +38,7 @@
 						<label><input type="radio" value="2" id="rate2" name="optradioRate" >2</label>
 					</div>
 					<div class="radio disabled">
-						<label><input type="radio" value="3" id="rate2" name="optradioRate" >3</label>
+						<label><input type="radio" value="3" id="rate3" name="optradioRate" >3</label>
 					</div>
 					<div class="radio disabled">
 						<label><input type="radio" value="4" id="rate4" name="optradioRate" >4</label>
@@ -49,15 +47,14 @@
 						<label><input type="radio" value="5" id="rate5" name="optradioRate" >5</label>
 					</div>
 				</div>
-        </div>
-      </div>
-      
+			</div>
+		</div>    
     </div>
-  </div>
-  </div>
-			<div class="row">
-				<div class= "col lg-6">
-					<label>Choisiez le nombre d'étoile de:</label>
+	</div>
+	</div>
+	<div class="row">
+<!-- 				<div class= "col lg-6">
+					<label>Choisissez le nombre d'étoile de:</label>
 					<div class="form-group d-flex flex-row">
 						<div class="radio">
 							<label><input type="radio" value="1" id="choix1" name="optradio" CHECKED>1</label>
@@ -74,68 +71,52 @@
 						<!-- <div class="radio disabled"> -->
 							<!-- <label><input type="radio" value="5" id="choix5" name="optradio" >5</label> -->
 						<!-- </div> -->
-					</div>
+			<!-- 		</div>
+				</div> -->
+		<div class= "col lg-6">
+			<label>Choisissez le nombre d'étoile :</label>
+			<div class="form-group d-flex flex-row">
+				<div class="radio2">
+					<label><input type="radio" value="1" id="choixMax1" name="optradio2" CHECKED>1</label>
 				</div>
-
-				<div class= "col lg-6">
-					<label>Choisiez le nombre d'étoile à:</label>
-					<div class="form-group d-flex flex-row">
-						<div class="radio">
-							<label><input type="radio" value="1" id="choixMax1" name="optradio2" CHECKED>1</label>
-						</div>
-						<div class="radio">
-							<label><input type="radio" value="2" id="choixMax2" name="optradio2" >2</label>
-						</div>
-						<div class="radio disabled">
-							<label><input type="radio" value="3" id="choixMax3" name="optradio2" >3</label>
-						</div>
-						<div class="radio disabled">
-							<label><input type="radio" value="4" id="choixMax4" name="optradio2" >4</label>
-						</div>
-						<div class="radio disabled">
-							<label><input type="radio" value="5" id="choixMax 5" name="optradio2" >5</label>
-						</div>
-					</div>
+				<div class="radio2">
+					<label><input type="radio" value="2" id="choixMax2" name="optradio2" >2</label>
+				</div>
+				<div class="radio2">
+					<label><input type="radio" value="3" id="choixMax3" name="optradio2" >3</label>
+				</div>
+				<div class="radio2">
+					<label><input type="radio" value="4" id="choixMax4" name="optradio2" >4</label>
+				</div>
+				<div class="radio2">
+					<label><input type="radio" value="5" id="choixMax5" name="optradio2" >5</label>
 				</div>
 			</div>
-			<div class="row">
-			<div class= "col md-6">
-				<button id= "generer" onclick="generate()" class= "btn btn-large btn-info">Générer</button>
-			</div>
-			<div id ="demo"></div>
-			<div class= "col md-5">	
-				<button id= "actualiser" onclick="resetFields()" value="Reset"  class= "btn btn-large btn-warning">Effacer</button>	
-			</div>	
-		</div>
-			
-		<div class="row  border border-warning">
-		<div id = "liste">
-			<div class= " mt-2 ml-3" id ="list1">	
-		
-			</div>
-			<div class= " mt-2 ml-3" id ="list">	
-		
-			</div>
-			</div>
-		
-		
 		</div>
 	</div>
-</div>
-</div>
-			
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <script src="restoo.js"></script>
-        <script src="pos.js"></script>
-<script src="map.js"></script>
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&callback=initMap"></script> -->
-<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&callback=initMap&librairies=places" type="text/javascript"></script> -->
-
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&libraries=places&callback=initMap"></script> -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&libraries=places&callback=initMap"  async defer></script>
-     
-
+	<div class="row">
+		<div class= "col md-6">
+			<button id= "generer" onclick="generate()" class= "btn btn-large btn-info">Générer</button>
+		</div>
+	</div>			
+	<div class="row  border border-warning">
+		<div id = "liste">
+			<div class= " mt-2 ml-3" id ="list1"></div>
+			<div class= " mt-2 ml-3" id ="list"></div>
+		</div>		
+	</div>
+		</div>
+	</div>
+	</div>			
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="restoo.js"></script>
+    <script src="pos.js"></script>
+	<script src="map.js"></script>
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&callback=initMap"></script> -->
+	<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&callback=initMap&librairies=places" type="text/javascript"></script> -->
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&libraries=places&callback=initMap"></script> -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&libraries=places&callback=initMap"  async defer></script>
 </body>
 </html>

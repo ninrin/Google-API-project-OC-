@@ -15,6 +15,9 @@ width: 100%;
   font-size: 15px;
 }
 
+confirmer{
+	height: 50px;
+}
 .active, .collapsible:hover {
   background-color: #555;
 }
@@ -24,4 +27,21 @@ width: 100%;
   display: none;
   overflow: hidden;
   background-color: #f1f1f1;
+}
+
+.content span {
+	float: right;
+}
+
+span.note {
+    color: yellow;
+    float: right;
+}
+
+.radio2{
+	margin-right: 20px;
+}
+
+div#liste{
+	width: 100%;
 }

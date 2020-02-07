@@ -6,6 +6,7 @@ function initMap (){
 		center: courn,// gps la courneuve par défault
 	}
 	var map = new google.maps.Map(document.getElementById("googleMap"), options);
+	 
 	
 
 if (navigator.geolocation) //  renvoie un simple booléen valant vrai ou faux selon la capacité du navigateur à utiliser la géolocalisation 
@@ -52,96 +53,45 @@ var neighborhoods = [ {lat: lati1, lng: longi1},  {lat: lati2, lng: longi2}];
 
   for (var i = 0; i < neighborhoods.length; i++) {
 	  
-    addMarkerJson(neighborhoods[i]);
-
+    placeMarker(map, neighborhoods[i], arRestaurants[i][0]);
+	img(arRestaurants[i][4],arRestaurants[i][5])
+addLi(arRestaurants[i][0], arRestaurants[i][0], streetView, arRestaurants[i][1] , arRestaurants[i][2]);
 
     
   }
-marker = new google.maps.Marker({
-      
-    });
-
-
-	function addMarkerJson(position) { 
-		var marker= new google.maps.Marker({
-			map: map, 
-			position: position
-			}); 
-	
-
-			google.maps.event.addListener(marker, 'click', function(){
-				img(lati2, longi2);
-img(lati1, longi1);
-geocode(lati2, longi2);
-geocode(lati1, longi1);
-
-				infoWindow.open(map, marker);
-				});
-
-		}
+  
+  
 
 
 
 
 
 
+async function placeMarker(map, locat,title) {
+	var marker = new google.maps.Marker({
+	position: locat,
+	map: map,		
+	title: title
+});  
 
-
-
-  google.maps.event.addListener(map, 'click', function(event) {
-	i
-   var txt;
-  var restaurantName = prompt("Please enter restaurant name:");
-  if (restaurantName == null || restaurantName == "") {
-    txt = "User cancelled the prompt.";
-  } else {
-    txt =  restaurantName;
-	
-
-	addLi(restaurantName, restaurantName);
-	  placeMarker(map, event.latLng,restaurantName);
-	   markers.push(placeMarker());
-	   var x = document.querySelectorAll("button.id");
-	  
-
+	var latitude =  locat.lat();
+	var longitude =  locat.lng();
+	console.log(latitude);
+	geocode(latitude, longitude);
+	img(latitude, longitude);
 }
 
 
- function placeMarker(map, location,title) {
-  var marker = new google.maps.Marker({
-    position: location,
-    map: map,
-	 title: title
-  
-  });
-  
- 
-  
- var latitude =  location.lat();
- var longitude =  location.lng();
-var latng = {lat: latitude, lng: longitude};
-console.log(latng);
-geocode(latitude, longitude);
-img(latitude, longitude);
-	  
-   
-
-
-
-  
-   
-  service= new google.maps.places.PlacesService(map);
+function placePlaceMarker(map, position){
+	service= new google.maps.places.PlacesService(map);
 
 
 request = {
-	location: latng ,
+	location: position,
 	radius: 800,
 	types: ['restaurant']
 	}; 
-	 
-
-
-	
+		
 	service.nearbySearch(request, callback); 
 	
 	google.maps.event.addListener(map, 'rightclick', function(event) {
@@ -151,7 +101,7 @@ request = {
 		$("#list").empty();
 		var request={
 			location: event.LatLng,
-			radius: 8000, 
+			radius: 800, 
 			types: ['restaurant']
 			};
 			service.nearbySearch(request, callback);
@@ -166,33 +116,26 @@ request = {
 		 markers.push(createMarker(results[i]));
 		  var place= results[i];
 
-			console.log(markers[i].title);
-
-			// txtz = "Nom du restaurant: " + place.name  + "Rating: " + place.rating
-			addLi(place.name, place.name,place.rating);
+			var lat = place.geometry.location.lat();
+			var lng = place.geometry.location.lng();
+			img(lat,lng);
+			addLi(place.name, place.name,streetView, place.rating, place.vicinity);
 
 		 }
 			toggle();
 		 
 }
 };
-		
 
 		function createMarker(place) { 
-		var placeLoc = place.geometry.location; 
+		var placeLoc = place.geometry.locatio; 
 		var marker= new google.maps.Marker({
 			map: map, 
 			position: place.geometry.location,
 			title: place.name,
 			}); 
-	// var infowindows = new google.maps.InfoWindow({
-    // content:  
-	// "<div style='float:left'>"+ "<img src=" + streetView +  ">" + "</div>" + "<div style='float:right; padding: 10px;'>" + "<strong>Address:</strong>" + place.name + "</div>"+ "</br>" + "<strong>Rating:</strong>" + place.rating + "</div>"
-
-  // }); 
-
+	
 			google.maps.event.addListener(marker, 'click', function(){
-				// infowindows.setContent(place.name);
 				infoWindow.open(map, marker);
 				});
 				return marker;
@@ -205,12 +148,28 @@ request = {
 				markers= []
 				
 				} 
-
-
-
 				
+};
+
+
+  google.maps.event.addListener(map, 'click', function(event) {
+   var txt;
+  var restaurantName = prompt("Please enter restaurant name:");
+  if (restaurantName == null || restaurantName == "") {
+    txt = "User cancelled the prompt.";
+  } else {
+    txt =  restaurantName;
+	geocode(event.lat, event.lng);
+	addLi(restaurantName, restaurantName,streetView,'', loc);
+	  placeMarker(map, event.latLng,restaurantName);
+	  placePlaceMarker(map, event.latLng);	
+	  
+	   
 
 }
+
+console.log(markers);
+ 
 })
 
 }			
@@ -219,18 +178,13 @@ request = {
 
 var c;
 var rate;
+var valeurSpan2= [];
 
 
 
-// $(document).ready(function(){
-  // $("#myBtn").click(function(){
-    // $("#myModal").modal();
-  // });
-// });
 
 function confirmer(){
-
-var valeur;//récupérer la valeur d'un bouton radio
+var valeur;//récupérer la valeur d'un bouton radio correspondant à la note
 		var optradioRate = document.getElementsByName("optradioRate");
 		for (var i = 0; i < optradioRate.length; i++) {
 			if (optradioRate[i].checked ) {
@@ -238,47 +192,52 @@ var valeur;//récupérer la valeur d'un bouton radio
 				console.log(valeur);
 			}
 		}
-		var input = document.getElementById("newRatingForm").value; 
+		var input = document.getElementById("exampleFormControlTextarea1").value; // valeur dela note
 		console.log(input);	
-		 // $("<p>" +input + "<span data-class =" + valeur + ">" + "note:"+ valeur + "</span></p>").insertAfter(c);
-// $(c).find(".content").css("background-color", "lightBlue");
-var par = $(c).parent();
-var parente = par.find(".content");
-parente2= parente.find("span");
-parente.append("<p>" +input + "<span class =" +valeur +"> note:"+ valeur + "</span></p>");
 
-
-var valeurSpan; // valeur de la class
-var valeurSpan2= []; // tableau contenant toute les valeurs (en string)
-const reducer = (accumulator, currentValue) => accumulator + currentValue; // opération permettant de prendre la valeur totale 
-for (var i = 0; i < parente2.length; i++) {
-			if (parente2[i]) {
-				valeurSpan = parente2[i].className;
+var par = $(c).parent(); // le DIV parent de l'id du boutton cliqué
+var content = par.find(".content"); // cible la class content qui contient les commentaires et notes
+var allSpan= content.find("span"); // cible les span dans content 
+content.append(`<p>${input} <span class =${valeur}> note: ${valeur} </span></p>`);
+let note =  par.find('.note').text();
+console.log(note);
+var valeurSpan; // valeur de la class du span
+var valeurSpan2= []; // tableau contenant toute les valeurs (en string) des class des span
+valeurSpan2.push(note);
+for (let span of allSpan) {
+			if (allSpan) {
+				valeurSpan = span.className;
 				valeurSpan2.push(valeurSpan);
-				var finale = valeurSpan2.map(numStr => parseInt (numStr)); // on change les string in numérique
+				let finale = valeurSpan2.map(numStr => parseInt (numStr)); // on change les string en numérique pour chaque valeur du array 
 				rate = finale.reduce(reducer)/valeurSpan2.length;
+				par.find('.note').text(rate);
 			}	
 		}
 console.log(valeurSpan2);
+console.log(valeurSpan);
 
-
-
- console.log(finale.reduce(reducer));
-console.log(rate);
 
  
 }
 
 
-$('#liste').on('click', 'button', function() {
+$('#liste').on('dblclick', 'button', function() {
 
-    var id = $(this).attr('id');
+    var id = $(this).attr('id'); // l'id du boutton cliqué (en valeur seulement)
     console.log(id);  
-	// id.setAttribute("p", input);
     $("#myModal").modal();
-	// $( "#id content").append("<p> input <p>");
-	 c = document.getElementById(id);
-	 // console.log(dataset.id);
+	 c = document.getElementById(id); // cible l'id du boutton
+	 var pari = $(c).parent().find(".note").text(); // permet de récuperer 
+	 var num = Number(pari);
+	 console.log(num);
+	 console.log(pari);
+	 
+if (pari === 'undefined'){
+		console.log('yoyo');
+	}
+	
+	
+	 // console.log(pari);
 })
 	
 
