@@ -24,13 +24,14 @@ confirmer{
 
 .content {
   padding: 0 18px;
-  display: none;
+  display: grid;
   overflow: hidden;
   background-color: #f1f1f1;
 }
 
 .content span {
 	float: right;
+	color: red;
 }
 
 span.note {
