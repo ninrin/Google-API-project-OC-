@@ -46,3 +46,7 @@ span.note {
 div#liste{
 	width: 100%;
 }
+
+.checked {
+  color: orange;
+}
