@@ -105,8 +105,8 @@ function confirmer() {
 
 	let par = $(idCliqué).parent(); // le DIV parent de l'id du boutton cliqué
 	let content = par.find(".content"); // cible la class content qui contient les commentaires et notes
-	let allSpan = content.find("span"); // cible les span dans content 
 	content.append(`<p>${input} <span class =${valeur}> note: ${valeur} </span></p>`);
+	let allSpan = content.find("span"); // cible les span dans content 
 	let note = par.find('.note').text();
 	console.log(note);
 	let valeurSpan; // valeur de la class du span
