@@ -32,21 +32,27 @@
 								<div class="modal-footer">
 									<button type="button" id="confirmation" onclick="confirmer()"
 										class="btn btn-default" data-dismiss="modal">confirmer</button>
-									<div id ="etoile">
-										
-									</div> &nbsp; <span id = 'rating'></span>
+									<div id="etoile">
+
+									</div> &nbsp; <span id='rating'></span>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row">
-					
+
 				</div>
-				<div class="row">
-					<!-- <div class= "col md-6"> -->
-					<!-- <button id= "generer" onclick="generate()" class= "btn btn-large btn-info">Générer</button> -->
-					<!-- </div> -->
+				<div id="menu">
+					>
+					<select id="filterId" class="btn btn-primary btn-lg">
+						<option disabled selected="selected"> Nombre d' étoile : </option>
+						<option value="1" name="optradio"> 1 étoile </option>
+						<option value="2"name="optradio"> 2 étoiles </option>
+						<option value="3"name="optradio"> 3 étoiles</option>
+						<option value="4"name="optradio"> 4 étoiles</option>
+						<option value="5"name="optradio"> 5 étoiles </option>
+					</select>
 				</div>
 				<div class="row  border border-warning">
 					<div id="liste">
@@ -69,7 +75,7 @@
 	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&libraries=places&callback=initMap"
 		async defer></script>
-		<script src="https://kit.fontawesome.com/dceeeb2d34.js" crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/dceeeb2d34.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

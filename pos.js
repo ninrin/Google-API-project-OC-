@@ -2,18 +2,18 @@ let streetView;
 let loc;
 const reducer = (accumulator, currentValue) => accumulator + currentValue; // opération permettant de prendre la valeur totale 
 
-function addLiCol(inner, restaurantName, url, valeur, adresse) {  // ajoute une ligne à chaque ajout de markers correspondants
+function addLiCol(inner, restaurantName, url, valeur, adresse, valeurDetail, valeurDetail2, valeurDetail3, valeurDetail4, valeurDetail5, commentaire, commentaire2, commentaire3, commentaire4, commentaire5) {  // ajoute une ligne à chaque ajout de markers correspondants
 	let ul = $("#list");
 	let img = document.createElement("img");
 	img.src = url;
-	let divs= $(`<div class ="restaurantName"></div>`)
+	let divs = $(`<div class ="restaurantName"></div>`)
 	let btn = $(`<button type="boutton" class= "collapsible"></button>`).attr("id", restaurantName)
 	let ifValeur = valeur || 0 // si il y a pas de valeur, alors la valeur de note équivaut à 0
 	let txt1 = $("<span></span>").text(inner);
 	let txt2 = $("<span></span>").addClass("note").text(ifValeur);
 	// for (let i = 0; i < ifValeur; i++) {
 	// 	const element = array[i];
-		
+
 	// }
 	let txt3 = $("<p></p>").text("adresse : " + adresse);
 	$(btn).append(txt1, txt2, txt3);   // Append new elements
@@ -22,6 +22,23 @@ function addLiCol(inner, restaurantName, url, valeur, adresse) {  // ajoute une 
 	btn.append(img);
 	let div = $(`<div class= "ccontent"></div>`).attr("class", 'content');
 	divs.append(div);
+
+	
+		if (valeurDetail) {
+			let idC = document.getElementById(restaurantName);
+			console.log(idC);
+			let contents = $(idC).parent().find(".content");
+			contents.append(`<p>${commentaire} <span class =${valeurDetail}> note: ${valeurDetail} </span></p>`);
+			contents.append(`<p>${commentaire2} <span class =${valeurDetail2}> note: ${valeurDetail2} </span></p>`);
+			contents.append(`<p>${commentaire3} <span class =${valeurDetail3}> note: ${valeurDetail3} </span></p>`);
+			contents.append(`<p>${commentaire4} <span class =${valeurDetail4}> note: ${valeurDetail4} </span></p>`);
+			contents.append(`<p>${commentaire5} <span class =${valeurDetail5}> note: ${valeurDetail5} </span></p>`);
+		} else {
+			console.log('nothing');
+		}
+			
+	
+
 }
 
 
@@ -65,7 +82,6 @@ for
 	for (const rating of object['ratings']) {
 		note += Number(rating['stars']); // note contiendra les nombres total des notes de chaque index
 	}
-	console.log(note);
 	note = (note / object['ratings'].length).toFixed(1); //calcul de moyenne 
 	arRestaurants.push([restaurant, note, adresse, commentaire, lati, longi]);
 }
@@ -92,9 +108,9 @@ lati2 = arRestaurants[1][4];
 let longi1 = arRestaurants[0][5];
 longi2 = arRestaurants[1][5];
 
-console.table(arRestaurants);
-console.log(arRestaurants[0][4]);
-console.log(arRestaurants[1][0], arRestaurants[1][1]);
+// console.table(arRestaurants);
+// console.log(arRestaurants[0][4]);
+// console.log(arRestaurants[1][0], arRestaurants[1][1]);
 
 
 const img = (latitude, longitude) => { // fonction pour ajouter l'image du restaurant en fonction de lat/lng
@@ -104,20 +120,20 @@ const img = (latitude, longitude) => { // fonction pour ajouter l'image du resta
 }
 
 
-
 const geocode = (lat, lng) => {
 	const LAT = lat;
 	const LNG = lng;
 	let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${LAT},${LNG}&key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc`;
-
 	fetch(url)
 		.then(response => response.json())
 		.then(data => {
-			console.log(data);
+			
+
 			let parts = data.results[0].address_components;
-			loc = data.results[0].formatted_address;
-			console.log(loc);
-			console.log(parts);
+			loc = data.results.formatted_address;
+			id = data.results[0].place_id;
+			// console.log(loc);
+			// console.log(parts);
 
 			infoWindow = new google.maps.InfoWindow({
 				content:
@@ -129,7 +145,11 @@ const geocode = (lat, lng) => {
 
 			});
 
-		}).catch(err => console.warn(err.message));
+		}).catch(
+			err => console.warn(err.message)
+		);
+
+
 
 }
 
@@ -138,7 +158,7 @@ function placePlaceMarker(map, position) { // place les markers des restaurants 
 
 	request = {
 		location: position,
-		radius: 800,
+		radius: 400,
 		types: ['restaurant']
 	};
 
@@ -157,6 +177,7 @@ function placePlaceMarker(map, position) { // place les markers des restaurants 
 	})
 
 	function callback(results, status) {
+		let url2;
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 			for (let i = 0; i < results.length; i++) {
 				markers.push(createMarker(results[i]));
@@ -164,7 +185,33 @@ function placePlaceMarker(map, position) { // place les markers des restaurants 
 				let lat = place.geometry.location.lat();
 				let lng = place.geometry.location.lng();
 				img(lat, lng);
-				addLiCol(place.name, place.name, streetView, place.rating, place.vicinity);
+				placeId= results[i].place_id;
+				url2 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc`
+				fetch(url2)
+					.then(responsess => responsess.json())
+					.then(datas => {
+				
+					
+							// console.log(datas.result);
+							// console.log(datas.result.reviews);
+							// console.log(datas.result.reviews[0]);
+							let commentaire= datas.result.reviews[0].text
+							let commentaire2= datas.result.reviews[1].text
+							let commentaire3= datas.result.reviews[2].text
+							let commentaire4= datas.result.reviews[3].text
+							let commentaire5= datas.result.reviews[4].text
+
+							let valeurDetail = datas.result.reviews[0].rating
+							let valeurDetail2 = datas.result.reviews[1].rating
+							let valeurDetail3 = datas.result.reviews[2].rating
+							let valeurDetail4 = datas.result.reviews[3].rating
+							let valeurDetail5 = datas.result.reviews[4].rating
+						
+							// addLiCol(inner, restaurantName, url, valeur, adresse, valeurDetail, commentaire)
+							addLiCol(place.name, place.name, streetView, place.rating, place.vicinity, valeurDetail, valeurDetail2, valeurDetail3, valeurDetail4, valeurDetail5, commentaire,commentaire2,commentaire3,commentaire4,commentaire5);
+						
+					}).catch(err => console.warn(err.message));
+					console.log(placeId);
 			}
 			toggle();
 		}
