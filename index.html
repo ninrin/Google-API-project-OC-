@@ -47,12 +47,14 @@
 					>
 					<select id="filterId" class="btn btn-primary btn-lg">
 						<option disabled selected="selected"> Nombre d' étoile : </option>
-						<option value="1" name="optradio"> 1 étoile </option>
-						<option value="2"name="optradio"> 2 étoiles </option>
-						<option value="3"name="optradio"> 3 étoiles</option>
-						<option value="4"name="optradio"> 4 étoiles</option>
-						<option value="5"name="optradio"> 5 étoiles </option>
+						<option value="1" name="optradio"> à partir de 1 étoile </option>
+						<option value="2"name="optradio"> à partir de  2 étoiles </option>
+						<option value="3"name="optradio"> à partir de  3 étoiles</option>
+						<option value="4"name="optradio"> à partir de  4 étoiles</option>
+						<option value="5"name="optradio"> à partir de  5 étoiles </option>
 					</select>
+
+					<button type="button" id ='choisir' class="btn btn-primary">choisir</button>
 				</div>
 				<div class="row  border border-warning">
 					<div id="liste">
@@ -66,7 +68,8 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-	<script src="restoo.js"></script>
+	<script src="resto.json"></script>
+	<script src="star.js"></script>
 	<script src="pos.js"></script>
 	<script src="map.js"></script>
 	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA95IBarLMikquqc-xUBNNL4sIpBrQv9yc&callback=initMap"></script> -->

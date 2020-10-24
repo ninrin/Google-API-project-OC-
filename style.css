@@ -34,7 +34,7 @@ confirmer{
 	color: red;
 }
 
-span.note {
+span.note, span.noteG {
     color: yellow;
     float: right;
 }

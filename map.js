@@ -41,43 +41,72 @@ function initMap() {
 	}
 
 
-	let neighborhoods = [{ lat: lati1, lng: longi1 }, { lat: lati2, lng: longi2 }];
-
-	for (let i = 0; i < neighborhoods.length; i++) {
-
-		placeMarker(map, neighborhoods[i], arRestaurants[i][0]);
-		img(arRestaurants[i][4], arRestaurants[i][5])
-		addLiCol(arRestaurants[i][0], arRestaurants[i][0], streetView, arRestaurants[i][1], arRestaurants[i][2]);
-	}
 
 
 
-	async function placeMarker(map, locat, title) { // place les markers saisi manuellement
+	function placeMarker(map, locat, title) { // place les markers 
 		let marker = new google.maps.Marker({
 			position: locat,
 			map: map,
 			title: title
 		});
 
-		let latitude = locat.lat();
-		let longitude = locat.lng();
-		geocode(latitude, longitude);
-		img(latitude, longitude);
 	}
 
 
+	const getUsers = async function () { // place les markers et la liste des restaurants du fichier JSon
+		try {
+			let response = await fetch('resto.json')
+			if (response.ok) {
+				let data = await response.json();
+				let stars= []; // prends les valeurs des etoiles dans la fichier json
+				for (let index = 0; index < data.length; index++) {
+					tableauJson.push([data[index].restaurantName,
+					data[index].address,
+					data[index].lat,
+					data[index].lng,
+					data[index].ratings]
+					);
+					
+						// stars.push([tableauJson[index][4]]); console.log(stars[index].stars);
+
+						// for (const key in tableauJson[index][4]) {
+						// 	if (tableauJson[index][4].hasOwnProperty(key)) {
+						// 		const element = tableauJson[index][4][key];
+						// 		console.log(element);
+								
+						// 	}
+						// }
+					
+					neighborhoods.push([{ lat: data[index].lat, lng: data[index].lng }]);
+					
+					placeMarker(map, neighborhoods[index][0], tableauJson[index][1]);
+					img(tableauJson[index][2], tableauJson[index][3])
+					addLiCol(tableauJson[index][0], tableauJson[index][0], img(data[index].lat, data[index].lng), 4, tableauJson[index][1]);
+				}
+				// console.log(tableauJson);
+
+			} else {
+				console.log('retour du serveur', response.status);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	getUsers();
 
 
 
-	google.maps.event.addListener(map, 'click', function (event) {
+
+	google.maps.event.addListener(map, 'click', function (event) { // ajouter un restaurant manuellement
 		let txt;
 		let restaurantName = prompt("Veuilez entrer le nom de votre restaurant:");
 		if (restaurantName == null || restaurantName == "") {
 			txt = "User cancelled the prompt.";
 		} else {
 			txt = restaurantName;
-			geocode(event.lat, event.lng);
-			addLiCol(restaurantName, restaurantName, streetView, '', loc);
+			addLiCol(restaurantName, restaurantName, img(event.latLng.lat(), event.latLng.lng()), '', geocode(event.latLng.lat(), event.latLng.lng()));
 			placeMarker(map, event.latLng, restaurantName);
 			placePlaceMarker(map, event.latLng);
 		}
@@ -87,162 +116,115 @@ function initMap() {
 
 
 
-let idCliqué;
+let idClicked; // reprend l'id cliqué par la souris 
 let rate;
-let valeurSpan2 = [];
+let valueSpan2 = [];
 
 
 function confirmer() {
-	let valeur = $('#rating').text()
-	let input = document.getElementById("exampleFormControlTextarea1").value; // valeur dela note
+	let valueOfStar = $('#rating').text()
+	let input = document.getElementById("exampleFormControlTextarea1").value; // valeur de du commentaire
 
-	let par = $(idCliqué).parent(); // le DIV parent de l'id du boutton cliqué
-	console.log(par);
-	let content = par.find(".content"); // cible la class content qui contient les commentaires et notes
-	content.append(`<p>${input} <span class =${valeur}> note: ${valeur} </span></p>`);
+	let parent = $(idClicked).parent(); // le DIV parent de l'id du boutton cliqué
+	let content = parent.find(".content"); // cible la class content qui contient les commentaires et notes
+	content.append(`<p>${input} <span class =${valueOfStar}> note: ${valueOfStar} </span></p>`);
 	let allSpan = content.find("span"); // cible les span dans content
-	let note = par.find('.note').text();
+	let note = parent.find('.note').text();
 	console.log(note);
-	let valeurSpan; // valeur de la class du span
-	let valeurSpan2 = []; // tableau contenant toute les valeurs (en string) des class des span
-	valeurSpan2.push(note);
+	let valueSpan; // valeur de la class du span
+	let valueSpan2 = []; // tableau contenant toute les valeurs (en string) des class des span
+	valueSpan2.push(note);
 	for (let span of allSpan) {
 		if (allSpan) {
-			valeurSpan = span.className;
-			valeurSpan2.push(valeurSpan);
-			let finale = valeurSpan2.map(numStr => parseInt(numStr)); // on change les string en numérique pour chaque valeur du array
-			rate = finale.reduce(reducer) / valeurSpan2.length;
-			par.find('.note').text(rate);
+			valueSpan = span.className;
+			valueSpan2.push(valueSpan);
+			let finale = valueSpan2.map(numStr => parseInt(numStr)); // on change les string en numérique pour chaque valeur du array
+			rate = finale.reduce(reducer) / valueSpan2.length;
+			parent.find('.note').text(rate);
 		}
 	}
-	$('.fas fa-star checked').classList.remove("checked");
-	console.log(valeurSpan2);
-
-
-
+	
 }
 
-// let allNote = $('#liste').find('.note').html();
 
-let notesGn = [];
+let noteGenerales = [];
 
 $('#liste').on('dblclick', 'button', function () { //
 
 	let id = $(this).attr('id'); // l'id du boutton cliqué (en valeur seulement)
 
 	$("#myModal").modal();
-	idCliqué = document.getElementById(id); // cible l'id du boutton
-	let globalRate = $(idCliqué).parent().find(".note").text(); // permet de récuperer la note générale
-	let num = Number(globalRate);
+	idClicked = document.getElementById(id); // cible l'id du boutton
+	// let globalRate = $(idClicked).parent().find(".note").text(); // permet de récuperer la note générale
+	// // let num = Number(globalRate);
 
+	// let allNote = document.querySelectorAll('.note');
+	
+	// for (let index = 0; index < allNote.length; index++) {
+	// 	let note = +allNote[index].innerHTML;
+	// 	noteGenerales.push(note)
+	// }
+	// console.log(noteGenerales);
+	// let finale = noteGenerales.map(filtre => parseInt(filtre)); // on change les string en numérique pour chaque valeur du array
 
-	if (globalRate === 'undefined') {
-		console.log('yoyo');
-	}
-	let allNote = document.querySelectorAll('.note');
-	// allNote.append('yo');
-	console.log(allNote[0].innerHTML);
-	console.log( allNote.length);
+	// function checkAdult(nb) {
+	// 	return nombre <= nb;
+	//   }
 
-	for (let index = 0; index < allNote.length; index++) {
-		let note = +allNote[index].innerHTML;
-		notesGn.push(note)
-	}
-	console.log(notesGn);
-	let finale = notesGn.map(filtre => parseInt(filtre)); // on change les string en numérique pour chaque valeur du array
-
-	function checkAdult(nb) {
-		return nombre <= nb;
-	  }
-
-	  var valeur;//récupérer la valeur d'un bouton radio
-	  var optradio = document.getElementsByName("optradio");
-	  for (var i = 0; i < optradio.length; i++) {
-		  if (optradio[i].checked ) {
-			  valeur = optradio[i].value;
-			  console.log(valeur);
-		  }	
-	  }
+	//   var valeur;//récupérer la valeur d'un bouton radio
+	//   var optradio = document.getElementsByName("optradio");
+	//   for (var i = 0; i < optradio.length; i++) {
+	// 	  if (optradio[i].checked ) {
+	// 		  valeur = optradio[i].value;
+	// 		  console.log(valeur);
+	// 	  }	
+	//   }
 })
-function filtres(params) {
-	let allNote = document.querySelectorAll('.note');
-	// allNote.append('yo');
-	console.log(allNote[0].innerHTML);
-	console.log( allNote.length);
+// // $("#choisir").click(function () {
+// // 	let notee = $('.noteG');
+// // 	let test;
+// // 	// console.log(notee[1].parentElement.attributes[2].nodeValue);
+// // 	let parr;
+// // 	// parr.css('visibility', 'hidden');
+// // 	let selection = document.querySelector('select'); // trouver le nombre d'étoile à filtrer
+	
+// // 	for (let index = 0; index < notee.length; index++) { // inserer les valeurs notes gloabales
+// // 		let note = +notee[index].innerHTML;
+// // 		notesGenerales.push(note)
+// // 	}
 
-	for (let index = 0; index < allNote.length; index++) {
-		noteGn.push(allNote[i].innerHTML)
-	}
-	console.log(notesGn);
-}
 
-let div = $('#etoile');
+// // 	let selected = selection.selectedIndex; // représente la valeur de du selectedIndex
+// // 	// notesGenerales.forEach(element => { // on met les elements du tableau
+// // 	// 	test = element.toString();
+// // 	// 	notesGenerales.push
+// // 	// });
 
-function addStar(star) {
-	let mot = $(`<span class= "fas fa-star"></span>`).attr("data-star", star);
-	div.append(mot);
-}
 
-for (let index = 1; index < 6; index++) {
-	addStar(index)
-}
+// 	console.log(notesGenerales); 
+// 	function checkFilter(selected, nombre) {
+// 		return nombre >= selected;
+// 	}
+// 	// console.log(checkFilter);
+// 	// console.log(selected);
 
-const allStars = document.querySelectorAll(".fa-star");
-console.log("allStars", allStars);
-const highlightedStars = [];
-const rating = document.querySelector("#rating");
+// 	let fi = notesGenerales.filter((item) => {
+// 		return item >= selected;
+// 	});
 
-init();
+// 	console.log(fi);
 
-function init() {
-	allStars.forEach((star) => {
-		star.addEventListener("click", saveRating);
-		star.addEventListener("mouseover", addCSS);
-		star.addEventListener("mouseleave", removeCSS);
-	});
-}
 
-function saveRating(e) {
-	console.log(e, e.target, e.target.nodeName, e.target.nodeType);
-	console.dir(e.target);
-	console.log(e.target.dataset);
-	removeEventListenersToAllStars();
-	rating.innerText = e.target.dataset.star;
-}
+// 	for (let index = 0; index < notesGenerales.length; index++) {
+// 		if (notee[index].textContent == fi[0]) {
+// 			// console.log(notee[index].textContent);
+// 			// parr = notee[index].parentElement.attributes[2].nodeValue;
+// 			// $(`#${parr}`).hide();
+// 			console.log('ca match!!');
 
-function removeEventListenersToAllStars() {
-	allStars.forEach((star) => {
-		star.removeEventListener("click", saveRating);
-		star.removeEventListener("mouseover", addCSS);
-		star.removeEventListener("mouseleave", removeCSS);
+// 		}
+// 	}
 
-	});
-}
+// });
 
-function addCSS(e, css = "checked") {
-	const overedStar = e.target;
-	overedStar.classList.add(css);
-	const previousSiblings = getPreviousSiblings(overedStar);
-	console.log("previousSiblings", previousSiblings);
-	previousSiblings.forEach((elem) => elem.classList.add(css));
-}
-
-function removeCSS(e, css = "checked") {
-	const overedStar = e.target;
-	overedStar.classList.remove(css);
-	const previousSiblings = getPreviousSiblings(overedStar);
-	previousSiblings.forEach((elem) => elem.classList.remove(css));
-}
-
-function getPreviousSiblings(elem) {
-	console.log("elem.previousSibling", elem.previousSibling);
-	let sibs = [];
-	const spanNodeType = 1;
-	while ((elem = elem.previousSibling)) {
-		if (elem.nodeType === spanNodeType) {
-			sibs = [elem, ...sibs];
-		}
-	}
-	return sibs;
-}
 
